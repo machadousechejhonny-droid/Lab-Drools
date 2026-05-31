@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Resultado de la Reserva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f0f4f8;
+        }
+        .result-container {
+            max-width: 650px;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #1a3a5c;
+            border-bottom: 2px solid #2196F3;
+            padding-bottom: 10px;
+        }
+        .benefit {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .restriction {
+            color: #c62828;
+            font-weight: bold;
+        }
+        .neutral {
+            color: #555;
+        }
+        .section {
+            margin: 15px 0;
+            padding: 12px;
+            background: #f9f9f9;
+            border-left: 4px solid #2196F3;
+            border-radius: 0 4px 4px 0;
+        }
+        .section h4 {
+            margin: 0 0 8px;
+            color: #2196F3;
+        }
+        .message-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            border: 1px solid #90caf9;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2196F3;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .inactive {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="result-container">
+    <h2>Resultado de la Evaluación</h2>
+
+    <div class="section">
+        <h4>Ascensos y Elegibilidad</h4>
+        <p>
+            Ascenso a Clase Ejecutiva:
+            <span th:class="${airlineResponse.businessClassUpgrade} ? 'benefit' : 'inactive'"
+                  th:text="${airlineResponse.businessClassUpgrade} ? 'Sí' : 'No'"></span>
+        </p>
+        <p>
+            Elegible para Ascensos:
+            <span th:class="${airlineResponse.upgradeEligible} ? 'benefit' : 'restriction'"
+                  th:text="${airlineResponse.upgradeEligible} ? 'Sí' : 'No'"></span>
+        </p>
+    </div>
+
+    <div class="section">
+        <h4>Servicios al Pasajero</h4>
+        <p>
+            Check-in Prioritario:
+            <span th:class="${airlineResponse.priorityCheckIn} ? 'benefit' : 'inactive'"
+                  th:text="${airlineResponse.priorityCheckIn} ? 'Activado' : 'No aplica'"></span>
+        </p>
+        <p>
+            Acceso Salón VIP:
+            <span th:class="${airlineResponse.vipLoungeAccess} ? 'benefit' : 'inactive'"
+                  th:text="${airlineResponse.vipLoungeAccess} ? 'Otorgado' : 'No aplica'"></span>
+        </p>
+        <p th:if="${airlineResponse.assignedSeat != null}">
+            Asiento Asignado:
+            <span class="benefit" th:text="${airlineResponse.assignedSeat}"></span>
+        </p>
+        <p>
+            Asiento Familiar Preferencial:
+            <span th:class="${airlineResponse.preferentialFamilySeat} ? 'benefit' : 'inactive'"
+                  th:text="${airlineResponse.preferentialFamilySeat} ? 'Asignado' : 'No aplica'"></span>
+        </p>
+    </div>
+
+    <div class="section">
+        <h4>Beneficios Económicos</h4>
+        <p>
+            Descuento Aplicado:
+            <span th:class="${airlineResponse.discountPercentage > 0} ? 'benefit' : 'inactive'"
+                  th:text="${airlineResponse.discountPercentage > 0 ? airlineResponse.discountPercentage + '%' : 'No aplica'}"></span>
+        </p>
+        <p>
+            Compensación por Retraso:
+            <span th:class="${airlineResponse.compensationAmount > 0} ? 'benefit' : 'inactive'"
+                  th:text="${airlineResponse.compensationAmount > 0 ? '$' + #numbers.formatDecimal(airlineResponse.compensationAmount, 0, 'COMMA', 2, 'POINT') : 'No aplica'}"></span>
+        </p>
+        <p>
+            Puntos de Lealtad Agregados:
+            <span th:class="${airlineResponse.loyaltyPointsAdded > 0} ? 'benefit' : 'inactive'"
+                  th:text="${airlineResponse.loyaltyPointsAdded > 0 ? airlineResponse.loyaltyPointsAdded + ' puntos' : 'No aplica'}"></span>
+        </p>
+    </div>
+
+    <div class="section">
+        <h4>Equipaje</h4>
+        <p>
+            Equipaje Permitido:
+            <span th:class="${airlineResponse.luggageAllowed} ? 'benefit' : 'restriction'"
+                  th:text="${airlineResponse.luggageAllowed} ? 'Sí' : 'No permitido'"></span>
+        </p>
+    </div>
+
+    <div class="message-box">
+        <strong>Reglas Activadas:</strong>
+        <p th:text="${airlineResponse.message}"></p>
+    </div>
+
+    <a th:href="@{/airline/form}">Nueva Reserva</a>
+</div>
+</body>
+</html>
